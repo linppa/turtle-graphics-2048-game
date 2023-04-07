@@ -22,7 +22,7 @@ this is obtained, or the board is full and no more moves can be made.
 '''
 # -- GLOBAL VARIABLES --
 current_score = 0
-game_board = []
+current_game_board = []
 font = ('courier', 12, 'normal')
 screen = turtle.Screen()
 GRID_SIZE = 4
@@ -43,6 +43,9 @@ def start_window():
     
     turtle.mainloop()
 
+def draw_grid():
+    pass
+
 
 # ---- SCORE FUNCTIONS & TEXTS ----
 def update_score():
@@ -56,6 +59,12 @@ def display_score():
     score.penup()
     score.goto(-250, 200)
     score.write(f"score:{current_score}", font = font)
+
+def print_stacked_list(game_board):
+    for row in game_board:
+        print(row)
+    print('')
+    
 
 # display options to restart & close game
 def display_menu():
@@ -93,23 +102,30 @@ def move_down():
     
 # ---- GAME FUNCTIONS ----
 # create game board
-def initialize_board():
-    global game_board
+def initialize_board(game_board):
+    game_board = []
     # iterate through 4 rows
     for i in range(GRID_SIZE):
-        game_board.append([0] * GRID_SIZE)
-    add_new_number()
-    add_new_number()
-    print(game_board)
+        # create a list of 4 zeros
+        row = [0] * GRID_SIZE
+        # add the list to the game board
+        game_board.append(row)
+    
+    # add two numbers to the board
+    add_new_number(game_board)
+    add_new_number(game_board)
+
     return game_board
 
+
 # add a new number to the board
-def add_new_number():
-    global game_board
+def add_new_number(game_board):
     #if the board is full, return
-    if 0 not in game_board:
+    if 0 not in [i for row in game_board for i in row]:
         print("Game over!")
-        return game_board
+        return False
+    
+    
     # pick a random row and column
     row = random.randint(0, GRID_SIZE - 1)
     col = random.randint(0, GRID_SIZE - 1)
@@ -118,7 +134,8 @@ def add_new_number():
         game_board[row][col] = random.choice([2, 4])
     # if the cell is not empty, call the function again
     else:
-        add_new_number()
+        add_new_number(game_board)
+    return game_board
         
 def game_over():
     pass
