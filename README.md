@@ -9,3 +9,9 @@
 
 friday april 7:
 * start window
+* menu displays options
+    * key binds
+        * restarts, closes game
+* left, right, up, down initialized
+    * BUG -- doesn't merge furthest same numbers first
+

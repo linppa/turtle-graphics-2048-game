@@ -20,6 +20,11 @@ direction to occupy the farthest blank cell without jumping over another number.
 The player's goal is to obtain the number 2048 on the board. The game ends when
 this is obtained, or the board is full and no more moves can be made.
 '''
+# revisions to do
+# delete print statements
+# check lines not longer than 80 characters
+
+
 # -- GLOBAL VARIABLES --
 global_score = 0
 global_game_board = []
@@ -94,10 +99,10 @@ def game_over():
 # listen for key presses
 def key_binding():
     turtle.listen()
-    # turtle.onkey(move_up, 'Up')
-    # turtle.onkey(move_down, 'Down')
+    turtle.onkey(move_up, 'Up')
+    turtle.onkey(move_down, 'Down')
     turtle.onkey(move_left, 'Left')
-    # turtle.onkey(move_right, 'Right')
+    turtle.onkey(move_right, 'Right')
     turtle.onkey(restart_game, 'r')
     turtle.onkey(screen.bye, 'e')
     
@@ -111,6 +116,8 @@ def restart_game():
 def move_left():
     global global_game_board
     print("Move Left:")
+    # check if move was made
+    valid_move = False
     for row in global_game_board:
         # combine adjacent matching numbers
         for i in range(GRID_SIZE - 1, 0, -1):
@@ -119,6 +126,7 @@ def move_left():
                     if row[j] != 0:
                         if row[i] == row[j]:
                             row[i], row[j] = (row[i] * 2), 0
+                            valid_move = True
                         break
         # shift all non-zero numbers to the left
         # new list containing all non-zero numbers in the current row
@@ -129,17 +137,96 @@ def move_left():
         zeroes = [0] * empty_spaces
         new_row = non_zero_numbers + zeroes
         row[:] = new_row
-    
-    add_new_number()
+        # if rows are different, move was made
+        if new_row != row:
+            valid_move = True
+        
+    if valid_move:
+        add_new_number()
     print_stacked_list(global_game_board)
     return global_game_board
     
 def move_right():
-    pass
+    global global_game_board
+    print("Move Right:")
+    for row in global_game_board:
+        # combine adjacent matching numbers
+        for i in range(GRID_SIZE - 1):
+            if row[i] != 0:
+                for j in range(i+1, GRID_SIZE):
+                    if row[j] != 0:
+                        if row[i] == row[j]:
+                            row[i], row[j] = (row[i] * 2), 0
+                        break
+        # shift all non-zero numbers to the right
+        # new list containing all non-zero numbers in the current row
+        non_zero_numbers = [number for number in row if number != 0]
+        # empty spaces in row
+        empty_spaces = GRID_SIZE - len(non_zero_numbers)
+        # new list of zeroes with length = to number of empty space
+        zeroes = [0] * empty_spaces
+        new_row = zeroes + non_zero_numbers
+        row[:] = new_row
+        
+    add_new_number()
+    print_stacked_list(global_game_board)
+    return global_game_board
+    
 def move_up():
-    pass
+    global global_game_board
+    print("Move Up:")
+    for column in range(GRID_SIZE):
+        # combine adjacent matching numbers
+        for i in range(GRID_SIZE - 1, 0, -1):
+            if global_game_board[i][column] != 0:
+                for j in range(i-1, -1, -1):
+                    if global_game_board[j][column] != 0:
+                        if global_game_board[i][column] == global_game_board[j][column]:
+                            global_game_board[i][column], global_game_board[j][column] = (global_game_board[i][column] * 2), 0
+                        break
+        # shift all non-zero numbers up
+        # new list containing all non-zero numbers in the current column
+        non_zero_numbers = [global_game_board[row][column] for row in range(GRID_SIZE) if global_game_board[row][column] != 0]
+        # empty spaces in column
+        empty_spaces = GRID_SIZE - len(non_zero_numbers)
+        # new list of zeroes with length = to number of empty space
+        zeroes = [0] * empty_spaces
+        new_column = non_zero_numbers + zeroes
+        for row in range(GRID_SIZE):
+            global_game_board[row][column] = new_column[row]
+        
+    add_new_number()
+    print_stacked_list(global_game_board)
+    return global_game_board
+    
+    
+    
 def move_down():
-    pass
+    global global_game_board
+    print("Move Down:")
+    for column in range(GRID_SIZE):
+        # combine adjacent matching numbers
+        for i in range(GRID_SIZE - 1):
+            if global_game_board[i][column] != 0:
+                for j in range(i+1, GRID_SIZE):
+                    if global_game_board[j][column] != 0:
+                        if global_game_board[i][column] == global_game_board[j][column]:
+                            global_game_board[i][column], global_game_board[j][column] = (global_game_board[i][column] * 2), 0
+                        break
+        # shift all non-zero numbers down
+        # new list containing all non-zero numbers in the current column
+        non_zero_numbers = [global_game_board[row][column] for row in range(GRID_SIZE) if global_game_board[row][column] != 0]
+        # empty spaces in column
+        empty_spaces = GRID_SIZE - len(non_zero_numbers)
+        # new list of zeroes with length = to number of empty space
+        zeroes = [0] * empty_spaces
+        new_column = zeroes + non_zero_numbers
+        for row in range(GRID_SIZE):
+            global_game_board[row][column] = new_column[row]
+        
+    add_new_number()
+    print_stacked_list(global_game_board)
+    return global_game_board
     
 # ---- GAME FUNCTIONS ----
 # create game board
