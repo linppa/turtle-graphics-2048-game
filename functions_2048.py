@@ -41,6 +41,8 @@ screen = turtle.Screen()
 screen.tracer(0, 0)
 score = turtle.Turtle()
 grid = turtle.Turtle()
+game_over = turtle.Turtle()
+win = turtle.Turtle()
 font = ('courier', 12, 'normal')
 font2 = ('courier', 20, 'normal')
 
@@ -54,7 +56,7 @@ def start_window():
     '''
     screen.setup(590, 620)
     screen.title('CS5001 2048 :D')
-    screen.bgcolor('AntiqueWhite')
+    screen.bgcolor('seashell2')
     draw_grid()
     # text & score
     display_score()
@@ -74,10 +76,11 @@ def draw_grid():
     grid.speed(0)
     grid.penup()
     grid.shape('square')
-    grid.color('AntiqueWhite4')
     grid.shapesize(4, 4, 10)
 
-    color_dictionary = {0: 'AntiqueWhite4', 2: 'cornsilk3', 4: 'cornsilk2'}
+    color_dictionary = {0: 'AntiqueWhite4', 2: 'AntiqueWhite3', 4: 'wheat3', 8: 'goldenrod3', 
+                        16: 'DarkGoldenrod2', 32: 'DarkGoldenrod1', 64: 'sienna3', 128: 'sienna2', 
+                        256: 'sienna4', 512: 'DarkSeaGreen4', 1024: 'DarkSeaGreen3', 2048: 'DarkSeaGreen2'}
 
     y_coordinate = 110
     for row in range(GRID_SIZE):
@@ -138,7 +141,6 @@ def display_menu():
 
 # game over text
 def display_game_over():
-    game_over = turtle.Turtle()
     game_over.hideturtle()
     game_over.penup()
     game_over.goto(-250, 155)
@@ -169,7 +171,6 @@ def check_game_over():
     return True
 
 def display_win():
-    win = turtle.Turtle()
     win.hideturtle()
     win.penup()
     win.goto(-250, 155)
@@ -202,6 +203,8 @@ def restart_game():
     global global_game_board, global_score
     global_game_board = []
     global_score = 0
+    game_over.clear()
+    win.clear()
     global_game_board = start_board()
     start_window()
     return global_game_board, global_score
