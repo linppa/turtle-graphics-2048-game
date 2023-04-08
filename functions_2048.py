@@ -47,6 +47,10 @@ def start_window():
     # key bindings
     key_binding()
     
+    game_condition = check_game_over()
+    if game_condition == True:
+        display_game_over()
+    
     turtle.mainloop()
 
 
@@ -90,10 +94,34 @@ def display_menu():
     menu.write(f"To end game, press 'E'\n"
                f"To restart,  press 'R'", font = font)
 
+def display_game_over():
+    game_over = turtle.Turtle()
+    game_over.hideturtle()
+    game_over.penup()
+    game_over.goto(-250, 150)
+    game_over.color('AntiqueWhite4')
+    game_over.write(f"GAME OVER!\n", font = ('courier', 18, 'normal'))
 
-def game_over():
-    print("Game over!")
-    
+def check_game_over():
+    global global_game_board
+    # check if board is full
+    for row in global_game_board:
+        for number in row:
+            if number == 0:
+                return False
+    # check if there are any adjacent matching numbers
+    # check rows
+    for row in global_game_board:
+        for i in range(GRID_SIZE - 1):
+            if row[i] == row[i+1]:
+                return False
+    # check columns
+    for i in range(GRID_SIZE):
+        for j in range(GRID_SIZE - 1):
+            if global_game_board[j][i] == global_game_board[j+1][i]:
+                return False
+    return True
+
 
 # ---- KEY BINDINGS ----
 # listen for key presses
@@ -146,6 +174,12 @@ def move_left():
     else:
         print("Invalid move!")
     
+    game_condition = check_game_over()
+    if game_condition == True:
+        display_game_over()
+        return global_game_board
+
+    
     print_stacked_list(global_game_board)
     return global_game_board
     
@@ -182,6 +216,11 @@ def move_right():
         add_new_number()
     else:
         print("Invalid move!")
+    
+    game_condition = check_game_over()
+    if game_condition == True:
+        display_game_over()
+        return global_game_board
     
     print_stacked_list(global_game_board)
     return global_game_board
@@ -221,6 +260,11 @@ def move_up():
     else:
         print("Invalid move!")
         
+    game_condition = check_game_over()
+    if game_condition == True:
+        display_game_over()
+        return global_game_board
+        
     print_stacked_list(global_game_board)
     return global_game_board
 
@@ -259,7 +303,12 @@ def move_down():
         add_new_number()
     else:
         print("Invalid move!")
-        
+    
+    game_condition = check_game_over()
+    if game_condition == True:
+        display_game_over()
+        return global_game_board
+    
     print_stacked_list(global_game_board)
     return global_game_board
     
@@ -291,12 +340,10 @@ def start_board():
 def add_new_number():
     global global_game_board
     print(f"globacl board before add new number: {global_game_board}")
-    random_row = 0
-    random_column = 0
     
-    #if the board is full, return
-    if 0 not in [i for row in global_game_board for i in row]:
-        game_over()
+    if check_game_over() == True:
+        print("Game Over!")
+        display_game_over()
         return global_game_board
     
     while True:
@@ -308,5 +355,4 @@ def add_new_number():
             break
     
     global_game_board[random_row][random_column] = random.choice([2, 4])
-    # if the cell is not empty, call the function again
     return global_game_board
