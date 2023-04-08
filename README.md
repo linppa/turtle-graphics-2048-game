@@ -14,4 +14,5 @@ friday april 7:
         * restarts, closes game
 * left, right, up, down initialized
     * BUG -- doesn't merge furthest same numbers first
+* game over logic implemented
 

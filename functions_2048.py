@@ -120,7 +120,25 @@ def check_game_over():
         for j in range(GRID_SIZE - 1):
             if global_game_board[j][i] == global_game_board[j+1][i]:
                 return False
+    display_game_over()
     return True
+
+def display_win():
+    win = turtle.Turtle()
+    win.hideturtle()
+    win.penup()
+    win.goto(-250, 150)
+    win.color('AntiqueWhite4')
+    win.write(f"YOU WIN!\n", font = ('courier', 18, 'normal'))
+    
+def check_win():
+    global global_game_board
+    for row in global_game_board:
+        for number in row:
+            if number == 2048:
+                display_win()
+                return True
+    return False
 
 
 # ---- KEY BINDINGS ----
@@ -139,6 +157,8 @@ def restart_game():
     global_game_board = []
     global_score = 0
     global_game_board = start_board()
+    screen.clear()
+    start_window()
 
     
 def move_left():
@@ -174,10 +194,11 @@ def move_left():
     else:
         print("Invalid move!")
     
-    game_condition = check_game_over()
-    if game_condition == True:
-        display_game_over()
-        return global_game_board
+    check_game_over()
+    # game_condition = check_game_over()
+    # if game_condition == True:
+    #     display_game_over()
+    #     return global_game_board
 
     
     print_stacked_list(global_game_board)
@@ -217,10 +238,11 @@ def move_right():
     else:
         print("Invalid move!")
     
-    game_condition = check_game_over()
-    if game_condition == True:
-        display_game_over()
-        return global_game_board
+    check_game_over()
+    # game_condition = check_game_over()
+    # if game_condition == True:
+    #     display_game_over()
+    #     return global_game_board
     
     print_stacked_list(global_game_board)
     return global_game_board
@@ -259,11 +281,12 @@ def move_up():
         add_new_number()
     else:
         print("Invalid move!")
-        
-    game_condition = check_game_over()
-    if game_condition == True:
-        display_game_over()
-        return global_game_board
+    
+    check_game_over()
+    # game_condition = check_game_over()
+    # if game_condition == True:
+    #     display_game_over()
+    #     return global_game_board
         
     print_stacked_list(global_game_board)
     return global_game_board
@@ -304,10 +327,11 @@ def move_down():
     else:
         print("Invalid move!")
     
-    game_condition = check_game_over()
-    if game_condition == True:
-        display_game_over()
-        return global_game_board
+    check_game_over()
+    # game_condition = check_game_over()
+    # if game_condition == True:
+    #     display_game_over()
+    #     return global_game_board
     
     print_stacked_list(global_game_board)
     return global_game_board
