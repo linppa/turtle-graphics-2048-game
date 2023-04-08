@@ -7,9 +7,10 @@ from functions_2048 import *
 def main():
     global global_game_board
     global_game_board = start_board()
-    print("Current board:")
-    print_stacked_list(global_game_board)
+
     start_window()
+    print("current board:")
+    print_stacked_list(global_game_board)
 
 
     

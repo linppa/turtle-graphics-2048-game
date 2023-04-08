@@ -23,6 +23,7 @@ this is obtained, or the board is full and no more moves can be made.
 Resources:
 https://cs111.wellesley.edu/labs/lab02/colors
 https://www.geeksforgeeks.org/2048-game-in-python/#
+https://www.geeksforgeeks.org/turtle-shape-function-in-python/
 
 '''
 # revisions to do
@@ -30,68 +31,76 @@ https://www.geeksforgeeks.org/2048-game-in-python/#
 # check lines not longer than 80 characters
 
 
-# -- GLOBAL VARIABLES --
+# ---- GLOBAL VARIABLES ----
 global_score = 0
 global_game_board = []
 GRID_SIZE = 4
 
+# ---- GLOBAL INTERFACE ----
 screen = turtle.Screen()
 screen.tracer(0, 0)
 score = turtle.Turtle()
-
-
+grid = turtle.Turtle()
 font = ('courier', 12, 'normal')
 font2 = ('courier', 20, 'normal')
 
 
 # ---- TURTLE SETUP ----
-# start window screen with menu options and score displayed
+
 def start_window():
-    screen.setup(600, 620)
+    '''
+    start_window is a helper function that presents the window setup, including
+    initial grid, score, & menu options. Also calls key bindings for controls.
+    '''
+    screen.setup(590, 620)
     screen.title('CS5001 2048 :D')
     screen.bgcolor('AntiqueWhite')
     draw_grid()
-    
     # text & score
     display_score()
     display_menu()
-    
     # key bindings
     key_binding()
-    
-    game_condition = check_game_over()
-    if game_condition == True:
-        display_game_over()
-    
+    # continue run window
     turtle.mainloop()
 
 
 def draw_grid():
-    grid = turtle.Turtle()
+    '''
+    draw_grid creates blocks from square turtles, & stamps them on the game
+    board. Numbers are written on top of the blocks if they are not 0.
+    '''
     grid.hideturtle()
     grid.speed(0)
     grid.penup()
     grid.shape('square')
     grid.color('AntiqueWhite4')
     grid.shapesize(4, 4, 10)
-    grid.goto(-150, 150)
+
+    color_dictionary = {0: 'AntiqueWhite4', 2: 'cornsilk3', 4: 'cornsilk2'}
 
     y_coordinate = 110
     for row in range(GRID_SIZE):
-        x_coordinate = -150
+        # strange bug where a rougue turtle visible, so i hide it with grid
+        x_coordinate = -144
         for column in range(GRID_SIZE):
             grid.goto(x_coordinate, y_coordinate)
+            # colors
+            if global_game_board[row][column] in color_dictionary:
+                grid.color(color_dictionary[global_game_board[row][column]])
+            else:
+                grid.color('AntiqueWhite4')
+            
             grid.stamp()
             if global_game_board[row][column] != 0:
                 number = turtle.Turtle()
                 number.hideturtle()
-                number.color('cornsilk')
+                number.color('white')
                 number.penup()
                 number.goto(x_coordinate - 5, y_coordinate - 15)
                 number.write(str(global_game_board[row][column]), font=("courier", 25, "bold"))
             x_coordinate += 100
         y_coordinate -= 100
-    
 
 
 # ---- SCORE FUNCTIONS & DISPLAY TEXTS ----
@@ -194,8 +203,8 @@ def restart_game():
     global_game_board = []
     global_score = 0
     global_game_board = start_board()
-    screen.clear()
     start_window()
+    return global_game_board, global_score
 
 # move left
 def move_left():
