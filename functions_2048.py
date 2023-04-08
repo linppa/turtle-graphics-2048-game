@@ -129,26 +129,31 @@ def move_left():
                             valid_move = True
                         break
         # shift all non-zero numbers to the left
-        # new list containing all non-zero numbers in the current row
+        # new list of non-zero numbers row
         non_zero_numbers = [number for number in row if number != 0]
         # empty spaces in row
         empty_spaces = GRID_SIZE - len(non_zero_numbers)
         # new list of zeroes with length = to number of empty space
         zeroes = [0] * empty_spaces
         new_row = non_zero_numbers + zeroes
-        row[:] = new_row
         # if rows are different, move was made
-        if new_row != row:
+        if row != new_row:
             valid_move = True
+        row[:] = new_row
         
-    if valid_move:
+    if valid_move == True:
         add_new_number()
+    else:
+        print("Invalid move!")
+    
     print_stacked_list(global_game_board)
     return global_game_board
     
 def move_right():
     global global_game_board
     print("Move Right:")
+    # check if move was made
+    valid_move = False
     for row in global_game_board:
         # combine adjacent matching numbers
         for i in range(GRID_SIZE - 1):
@@ -157,6 +162,7 @@ def move_right():
                     if row[j] != 0:
                         if row[i] == row[j]:
                             row[i], row[j] = (row[i] * 2), 0
+                            valid_move = True
                         break
         # shift all non-zero numbers to the right
         # new list containing all non-zero numbers in the current row
@@ -166,15 +172,25 @@ def move_right():
         # new list of zeroes with length = to number of empty space
         zeroes = [0] * empty_spaces
         new_row = zeroes + non_zero_numbers
+        # if rows are different, move was made
+        if row != new_row:
+            valid_move = True
         row[:] = new_row
-        
-    add_new_number()
+
+    
+    if valid_move == True:
+        add_new_number()
+    else:
+        print("Invalid move!")
+    
     print_stacked_list(global_game_board)
     return global_game_board
     
 def move_up():
     global global_game_board
     print("Move Up:")
+    # check if move was made
+    valid_move = False
     for column in range(GRID_SIZE):
         # combine adjacent matching numbers
         for i in range(GRID_SIZE - 1, 0, -1):
@@ -183,27 +199,37 @@ def move_up():
                     if global_game_board[j][column] != 0:
                         if global_game_board[i][column] == global_game_board[j][column]:
                             global_game_board[i][column], global_game_board[j][column] = (global_game_board[i][column] * 2), 0
+                            valid_move = True
                         break
         # shift all non-zero numbers up
         # new list containing all non-zero numbers in the current column
-        non_zero_numbers = [global_game_board[row][column] for row in range(GRID_SIZE) if global_game_board[row][column] != 0]
+        non_zero_numbers = [number for number in [row[column] for row in global_game_board] if number != 0]
         # empty spaces in column
         empty_spaces = GRID_SIZE - len(non_zero_numbers)
         # new list of zeroes with length = to number of empty space
         zeroes = [0] * empty_spaces
         new_column = non_zero_numbers + zeroes
-        for row in range(GRID_SIZE):
-            global_game_board[row][column] = new_column[row]
+        # if columns are different, move was made
+        if [row[column] for row in global_game_board] != new_column:
+            valid_move = True
+        # update columns
+        for i in range(GRID_SIZE):
+            global_game_board[i][column] = new_column[i]
+    
+    if valid_move == True:
+        add_new_number()
+    else:
+        print("Invalid move!")
         
-    add_new_number()
     print_stacked_list(global_game_board)
     return global_game_board
-    
-    
-    
+
+
 def move_down():
     global global_game_board
     print("Move Down:")
+    # check if move was made
+    valid_move = False
     for column in range(GRID_SIZE):
         # combine adjacent matching numbers
         for i in range(GRID_SIZE - 1):
@@ -212,22 +238,32 @@ def move_down():
                     if global_game_board[j][column] != 0:
                         if global_game_board[i][column] == global_game_board[j][column]:
                             global_game_board[i][column], global_game_board[j][column] = (global_game_board[i][column] * 2), 0
+                            valid_move = True
                         break
         # shift all non-zero numbers down
         # new list containing all non-zero numbers in the current column
-        non_zero_numbers = [global_game_board[row][column] for row in range(GRID_SIZE) if global_game_board[row][column] != 0]
+        non_zero_numbers = [number for number in [row[column] for row in global_game_board] if number != 0]
         # empty spaces in column
         empty_spaces = GRID_SIZE - len(non_zero_numbers)
         # new list of zeroes with length = to number of empty space
         zeroes = [0] * empty_spaces
         new_column = zeroes + non_zero_numbers
-        for row in range(GRID_SIZE):
-            global_game_board[row][column] = new_column[row]
+        # if columns are different, move was made
+        if [row[column] for row in global_game_board] != new_column:
+            valid_move = True
+        # update columns
+        for i in range(GRID_SIZE):
+            global_game_board[i][column] = new_column[i]
+            
+    if valid_move == True:
+        add_new_number()
+    else:
+        print("Invalid move!")
         
-    add_new_number()
     print_stacked_list(global_game_board)
     return global_game_board
     
+
 # ---- GAME FUNCTIONS ----
 # create game board
 def initialize_board():
