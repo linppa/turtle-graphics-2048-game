@@ -15,4 +15,10 @@ friday april 7:
 * left, right, up, down initialized
     * BUG -- doesn't merge furthest same numbers first
 * game over logic implemented
+* restart screen fixed after game-over
+* scores updating
+
+saturday april 8th
+* start drawing turtle grid
+
 

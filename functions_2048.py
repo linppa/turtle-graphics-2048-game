@@ -31,6 +31,7 @@ global_game_board = []
 
 font = ('courier', 12, 'normal')
 screen = turtle.Screen()
+score = turtle.Turtle()
 GRID_SIZE = 4
 
 # ---- TURTLE SETUP ----
@@ -39,6 +40,7 @@ def start_window():
     screen.setup(600, 600)
     screen.title('CS5001 2048 :D')
     screen.bgcolor('AntiqueWhite')
+    draw_grid()
     
     # text & score
     display_score()
@@ -55,35 +57,35 @@ def start_window():
 
 
 def draw_grid():
-    pass
+    grid = turtle.Turtle()
+    grid.shape('square')
+    grid.color('AntiqueWhite4')
+    grid.penup()
+    
 
 
 # ---- SCORE FUNCTIONS & DISPLAY TEXTS ----
-def get_score():
-    global global_score
-    return global_score
-
-
-def update_score(add_points):
+# update score
+def update_score(add_points: int):
     global global_score
     global_score += add_points
-    
+    return global_score
 
-# display current score
+# display & refresh current score
 def display_score():
     global global_score
-    score = turtle.Turtle()
+    score.clear()
     score.hideturtle()
     score.penup()
     score.goto(-250, 200)
     score.write(f"score:{global_score}", font = font)
 
+# print game board to terminal
 def print_stacked_list(game_board):
     for row in game_board:
         print(row)
     print('')
     
-
 # display options to restart & close game
 def display_menu():
     menu = turtle.Turtle()
@@ -94,6 +96,7 @@ def display_menu():
     menu.write(f"To end game, press 'E'\n"
                f"To restart,  press 'R'", font = font)
 
+# game over text
 def display_game_over():
     game_over = turtle.Turtle()
     game_over.hideturtle()
@@ -151,7 +154,8 @@ def key_binding():
     turtle.onkey(move_right, 'Right')
     turtle.onkey(restart_game, 'r')
     turtle.onkey(screen.bye, 'e')
-    
+
+# restart game, clear screen, and start new game
 def restart_game():
     global global_game_board, global_score
     global_game_board = []
@@ -160,7 +164,7 @@ def restart_game():
     screen.clear()
     start_window()
 
-    
+# move left
 def move_left():
     global global_game_board
     print("Move Left:")
@@ -174,6 +178,7 @@ def move_left():
                     if row[j] != 0:
                         if row[i] == row[j]:
                             row[i], row[j] = (row[i] * 2), 0
+                            update_score((row[i]))
                             valid_move = True
                         break
         # shift all non-zero numbers to the left
@@ -191,19 +196,18 @@ def move_left():
         
     if valid_move == True:
         add_new_number()
+        display_score()
     else:
         print("Invalid move!")
     
     check_game_over()
-    # game_condition = check_game_over()
-    # if game_condition == True:
-    #     display_game_over()
-    #     return global_game_board
+    check_win()
 
     
     print_stacked_list(global_game_board)
     return global_game_board
-    
+
+# move right
 def move_right():
     global global_game_board
     print("Move Right:")
@@ -217,6 +221,7 @@ def move_right():
                     if row[j] != 0:
                         if row[i] == row[j]:
                             row[i], row[j] = (row[i] * 2), 0
+                            update_score((row[i]))
                             valid_move = True
                         break
         # shift all non-zero numbers to the right
@@ -232,21 +237,19 @@ def move_right():
             valid_move = True
         row[:] = new_row
 
-    
     if valid_move == True:
         add_new_number()
+        display_score()
     else:
         print("Invalid move!")
     
     check_game_over()
-    # game_condition = check_game_over()
-    # if game_condition == True:
-    #     display_game_over()
-    #     return global_game_board
+    check_win()
     
     print_stacked_list(global_game_board)
     return global_game_board
-    
+
+# move up
 def move_up():
     global global_game_board
     print("Move Up:")
@@ -260,6 +263,7 @@ def move_up():
                     if global_game_board[j][column] != 0:
                         if global_game_board[i][column] == global_game_board[j][column]:
                             global_game_board[i][column], global_game_board[j][column] = (global_game_board[i][column] * 2), 0
+                            update_score((global_game_board[i][column]))
                             valid_move = True
                         break
         # shift all non-zero numbers up
@@ -279,19 +283,17 @@ def move_up():
     
     if valid_move == True:
         add_new_number()
+        display_score()
     else:
         print("Invalid move!")
     
     check_game_over()
-    # game_condition = check_game_over()
-    # if game_condition == True:
-    #     display_game_over()
-    #     return global_game_board
+    check_win()
         
     print_stacked_list(global_game_board)
     return global_game_board
 
-
+# move down
 def move_down():
     global global_game_board
     print("Move Down:")
@@ -305,6 +307,7 @@ def move_down():
                     if global_game_board[j][column] != 0:
                         if global_game_board[i][column] == global_game_board[j][column]:
                             global_game_board[i][column], global_game_board[j][column] = (global_game_board[i][column] * 2), 0
+                            update_score((global_game_board[i][column]))
                             valid_move = True
                         break
         # shift all non-zero numbers down
@@ -324,14 +327,12 @@ def move_down():
             
     if valid_move == True:
         add_new_number()
+        display_score()
     else:
         print("Invalid move!")
     
     check_game_over()
-    # game_condition = check_game_over()
-    # if game_condition == True:
-    #     display_game_over()
-    #     return global_game_board
+    check_win()
     
     print_stacked_list(global_game_board)
     return global_game_board
@@ -358,7 +359,6 @@ def start_board():
     global_game_board = initialize_board()
     print_stacked_list(global_game_board)
     return global_game_board
-
 
 # add a new number to the board
 def add_new_number():
