@@ -9,8 +9,8 @@ def main():
     global_game_board = start_board()
     print("Current board:")
     print_stacked_list(global_game_board)
-    # global_game_board = move_left()
     start_window()
+
 
     
 if __name__ == '__main__':

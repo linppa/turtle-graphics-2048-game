@@ -20,5 +20,8 @@ friday april 7:
 
 saturday april 8th
 * start drawing turtle grid
+* initial grid stamped
+* numbers stamped
+    * fixed laggy grid movment
 
 

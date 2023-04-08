@@ -19,6 +19,11 @@ direction to occupy the farthest blank cell without jumping over another number.
 
 The player's goal is to obtain the number 2048 on the board. The game ends when
 this is obtained, or the board is full and no more moves can be made.
+
+Resources:
+https://cs111.wellesley.edu/labs/lab02/colors
+https://www.geeksforgeeks.org/2048-game-in-python/#
+
 '''
 # revisions to do
 # delete print statements
@@ -28,16 +33,21 @@ this is obtained, or the board is full and no more moves can be made.
 # -- GLOBAL VARIABLES --
 global_score = 0
 global_game_board = []
+GRID_SIZE = 4
+
+screen = turtle.Screen()
+screen.tracer(0, 0)
+score = turtle.Turtle()
+
 
 font = ('courier', 12, 'normal')
-screen = turtle.Screen()
-score = turtle.Turtle()
-GRID_SIZE = 4
+font2 = ('courier', 20, 'normal')
+
 
 # ---- TURTLE SETUP ----
 # start window screen with menu options and score displayed
 def start_window():
-    screen.setup(600, 600)
+    screen.setup(600, 620)
     screen.title('CS5001 2048 :D')
     screen.bgcolor('AntiqueWhite')
     draw_grid()
@@ -58,9 +68,29 @@ def start_window():
 
 def draw_grid():
     grid = turtle.Turtle()
+    grid.hideturtle()
+    grid.speed(0)
+    grid.penup()
     grid.shape('square')
     grid.color('AntiqueWhite4')
-    grid.penup()
+    grid.shapesize(4, 4, 10)
+    grid.goto(-150, 150)
+
+    y_coordinate = 110
+    for row in range(GRID_SIZE):
+        x_coordinate = -150
+        for column in range(GRID_SIZE):
+            grid.goto(x_coordinate, y_coordinate)
+            grid.stamp()
+            if global_game_board[row][column] != 0:
+                number = turtle.Turtle()
+                number.hideturtle()
+                number.color('cornsilk')
+                number.penup()
+                number.goto(x_coordinate - 5, y_coordinate - 15)
+                number.write(str(global_game_board[row][column]), font=("courier", 25, "bold"))
+            x_coordinate += 100
+        y_coordinate -= 100
     
 
 
@@ -77,8 +107,9 @@ def display_score():
     score.clear()
     score.hideturtle()
     score.penup()
-    score.goto(-250, 200)
-    score.write(f"score:{global_score}", font = font)
+    score.goto(-250, 212)
+    score.color('sienna')
+    score.write(f"Score:{global_score}", font = font)
 
 # print game board to terminal
 def print_stacked_list(game_board):
@@ -91,7 +122,7 @@ def display_menu():
     menu = turtle.Turtle()
     menu.hideturtle()
     menu.penup()
-    menu.goto(-250, 230)
+    menu.goto(-250, 240)
     menu.color('AntiqueWhite4')
     menu.write(f"To end game, press 'E'\n"
                f"To restart,  press 'R'", font = font)
@@ -101,10 +132,11 @@ def display_game_over():
     game_over = turtle.Turtle()
     game_over.hideturtle()
     game_over.penup()
-    game_over.goto(-250, 150)
-    game_over.color('AntiqueWhite4')
-    game_over.write(f"GAME OVER!\n", font = ('courier', 18, 'normal'))
+    game_over.goto(-250, 155)
+    game_over.color('firebrick2')
+    game_over.write(f"GAME OVER!\n", font = font2)
 
+# check game over
 def check_game_over():
     global global_game_board
     # check if board is full
@@ -124,15 +156,16 @@ def check_game_over():
             if global_game_board[j][i] == global_game_board[j+1][i]:
                 return False
     display_game_over()
+    print('GAME OVER!')
     return True
 
 def display_win():
     win = turtle.Turtle()
     win.hideturtle()
     win.penup()
-    win.goto(-250, 150)
-    win.color('AntiqueWhite4')
-    win.write(f"YOU WIN!\n", font = ('courier', 18, 'normal'))
+    win.goto(-250, 155)
+    win.color('OliveDrab')
+    win.write(f"YOU WIN!\n", font = font2)
     
 def check_win():
     global global_game_board
@@ -167,7 +200,7 @@ def restart_game():
 # move left
 def move_left():
     global global_game_board
-    print("Move Left:")
+    print('left:')
     # check if move was made
     valid_move = False
     for row in global_game_board:
@@ -203,14 +236,14 @@ def move_left():
     check_game_over()
     check_win()
 
-    
+    draw_grid()
     print_stacked_list(global_game_board)
     return global_game_board
 
 # move right
 def move_right():
     global global_game_board
-    print("Move Right:")
+    print('right:')
     # check if move was made
     valid_move = False
     for row in global_game_board:
@@ -246,13 +279,14 @@ def move_right():
     check_game_over()
     check_win()
     
+    draw_grid()
     print_stacked_list(global_game_board)
     return global_game_board
 
 # move up
 def move_up():
     global global_game_board
-    print("Move Up:")
+    print('up:')
     # check if move was made
     valid_move = False
     for column in range(GRID_SIZE):
@@ -289,14 +323,15 @@ def move_up():
     
     check_game_over()
     check_win()
-        
+    
+    draw_grid()
     print_stacked_list(global_game_board)
     return global_game_board
 
 # move down
 def move_down():
     global global_game_board
-    print("Move Down:")
+    print('down:')
     # check if move was made
     valid_move = False
     for column in range(GRID_SIZE):
@@ -334,6 +369,7 @@ def move_down():
     check_game_over()
     check_win()
     
+    draw_grid()
     print_stacked_list(global_game_board)
     return global_game_board
     
@@ -363,12 +399,11 @@ def start_board():
 # add a new number to the board
 def add_new_number():
     global global_game_board
-    print(f"globacl board before add new number: {global_game_board}")
     
-    if check_game_over() == True:
-        print("Game Over!")
-        display_game_over()
-        return global_game_board
+    check_game_over()
+    check_win()
+    
+    print(f'new number added:')
     
     while True:
         # pick a random row and column
