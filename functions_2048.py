@@ -54,7 +54,7 @@ def start_window():
     start_window is a helper function that presents the window setup, including
     initial grid, score, & menu options. Also calls key bindings for controls.
     '''
-    screen.setup(590, 620)
+    screen.setup(600, 630)
     screen.title('CS5001 2048 :D')
     screen.bgcolor('seashell2')
     draw_grid()
@@ -73,16 +73,17 @@ def draw_grid():
     board. Numbers are written on top of the blocks if they are not 0.
     '''
     grid.hideturtle()
+    grid.clear()
     grid.speed(0)
     grid.penup()
     grid.shape('square')
     grid.shapesize(4, 4, 10)
 
     color_dictionary = {0: 'AntiqueWhite4', 2: 'AntiqueWhite3', 4: 'wheat3', 8: 'goldenrod3', 
-                        16: 'DarkGoldenrod2', 32: 'DarkGoldenrod1', 64: 'sienna3', 128: 'sienna2', 
-                        256: 'sienna4', 512: 'DarkSeaGreen4', 1024: 'DarkSeaGreen3', 2048: 'DarkSeaGreen2'}
+                        16: 'DarkGoldenrod2', 32: 'goldenrod1', 64: 'sienna3', 128: 'sienna2', 
+                        256: 'sienna4', 512: 'DarkSeaGreen4', 1024: 'DarkSeaGreen3', 2048: 'CadetBlue3'}
 
-    y_coordinate = 110
+    y_coordinate = 120
     for row in range(GRID_SIZE):
         # strange bug where a rougue turtle visible, so i hide it with grid
         x_coordinate = -144
@@ -93,15 +94,14 @@ def draw_grid():
                 grid.color(color_dictionary[global_game_board[row][column]])
             else:
                 grid.color('AntiqueWhite4')
-            
             grid.stamp()
             if global_game_board[row][column] != 0:
                 number = turtle.Turtle()
                 number.hideturtle()
                 number.color('white')
                 number.penup()
-                number.goto(x_coordinate - 5, y_coordinate - 15)
-                number.write(str(global_game_board[row][column]), font=("courier", 25, "bold"))
+                number.goto(x_coordinate, y_coordinate - 15)
+                number.write(str(global_game_board[row][column]), align = 'center', font=("courier", 25, "bold"))
             x_coordinate += 100
         y_coordinate -= 100
 
@@ -119,7 +119,7 @@ def display_score():
     score.clear()
     score.hideturtle()
     score.penup()
-    score.goto(-250, 212)
+    score.goto(-250, 222)
     score.color('sienna')
     score.write(f"Score:{global_score}", font = font)
 
@@ -134,7 +134,7 @@ def display_menu():
     menu = turtle.Turtle()
     menu.hideturtle()
     menu.penup()
-    menu.goto(-250, 240)
+    menu.goto(-250, 250)
     menu.color('AntiqueWhite4')
     menu.write(f"To end game, press 'E'\n"
                f"To restart,  press 'R'", font = font)
@@ -143,7 +143,7 @@ def display_menu():
 def display_game_over():
     game_over.hideturtle()
     game_over.penup()
-    game_over.goto(-250, 155)
+    game_over.goto(-250, 165)
     game_over.color('firebrick2')
     game_over.write(f"GAME OVER!\n", font = font2)
 
@@ -173,9 +173,18 @@ def check_game_over():
 def display_win():
     win.hideturtle()
     win.penup()
-    win.goto(-250, 155)
-    win.color('OliveDrab')
+    win.goto(-250, 165)
+    win.color('PaleGreen4')
     win.write(f"YOU WIN!\n", font = font2)
+    
+    print('Thank you for playing 2048! \n& for helping us learn '
+          'throughout the semester, \n'
+          'to make this game possible! :)\n')
+    win.goto(-250, -285)
+    win.color('PaleGreen4')
+    win.write(f'Thank you for playing 2048! \n& for helping us learn '
+                     'throughout the semester, \n'
+                     'to make this game possible! :)', font = font)
     
 def check_win():
     global global_game_board
@@ -183,6 +192,7 @@ def check_win():
         for number in row:
             if number == 2048:
                 display_win()
+                print('YOU WIN!')
                 return True
     return False
 
@@ -197,6 +207,32 @@ def key_binding():
     turtle.onkey(move_right, 'Right')
     turtle.onkey(restart_game, 'r')
     turtle.onkey(screen.bye, 'e')
+    
+    # bind error function to all other keys - yikes
+    for key in ['a', 'b', 'c', 'd', 'f', 'g', 'h', 'i', 'j',
+                'k', 'l', 'm', 'n', 'o', 'p', 'q', 's', 't',
+                'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3',
+                '4', '5', '6', '7', '8', '9', '0', 'space',
+                'Return', 'Escape', 'BackSpace', 'Tab', 'Caps_Lock',
+                'Shift_L', 'Shift_R', 'Control_L', 'Control_R',
+                'Alt_L', 'Alt_R', 'Pause', 'Scroll_Lock', 'Home',
+                'Insert', 'Delete', 'End', 'Page_Up', 'Page_Down',
+                'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8',
+                'F9', 'F10', 'F11', 'F12', '<', '>', '?', '/',
+                ':', ';', '"', "'", '[', ']', '{', '}', '|',
+                '+', '-', '*', '=', '_', '(', ')', '&', '^',
+                '%', '$', '#', '@', '!', '~', '`', 'comma', 'period']:
+        turtle.onkey(key_error, key)
+    
+def key_error():
+    print('Invalid key!')
+    key_error = turtle.Turtle()
+    key_error.hideturtle()
+    key_error.penup()
+    key_error.goto(50, -250)
+    key_error.color('firebrick2')
+    key_error.write(f"Invalid key! Please try again.", font = font)
+    turtle.ontimer(key_error.clear, 500)
 
 # restart game, clear screen, and start new game
 def restart_game():
