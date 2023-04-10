@@ -20,27 +20,28 @@ direction to occupy the farthest blank cell without jumping over another number.
 The player's goal is to obtain the number 2048 on the board. The game ends when
 this is obtained, or the board is full and no more moves can be made.
 
-Resources:
+Resources referenced:
 https://cs111.wellesley.edu/labs/lab02/colors
 https://www.geeksforgeeks.org/2048-game-in-python/#
 https://www.geeksforgeeks.org/turtle-shape-function-in-python/
 
 '''
-# revisions to do
-# delete print statements
-# check lines not longer than 80 characters
+# revisions to do:
+    # delete print statements
+    # check lines not longer than 80 characters
 
 
 # ---- GLOBAL VARIABLES ----
 global_score = 0
 global_game_board = []
-GRID_SIZE = 4
+grid_size = 4
 
 # ---- GLOBAL INTERFACE ----
 screen = turtle.Screen()
 screen.tracer(0, 0)
 score = turtle.Turtle()
 grid = turtle.Turtle()
+number = turtle.Turtle()
 game_over = turtle.Turtle()
 win = turtle.Turtle()
 font = ('courier', 12, 'normal')
@@ -54,18 +55,49 @@ def start_window():
     start_window is a helper function that presents the window setup, including
     initial grid, score, & menu options. Also calls key bindings for controls.
     '''
-    screen.setup(600, 630)
+    if grid_size == 4:
+        screen.setup(800, 850)
+    elif grid_size == 5:
+        screen.setup(800, 850)
+    elif grid_size == 6:
+        screen.setup(850, 900)
+    
     screen.title('CS5001 2048 :D')
     screen.bgcolor('seashell2')
     draw_grid()
     # text & score
     display_score()
     display_menu()
+    
+    display_win()
+    display_game_over()
     # key bindings
     key_binding()
     # continue run window
     turtle.mainloop()
 
+def get_grid_size():
+    '''
+    get_grid_size takes input from user to determine size of grid.
+    '''
+    global grid_size
+    size = turtle.Screen()
+    size.setup(500, 500)
+    screen.bgcolor('seashell2')
+    size.title("Welcome to CS5001 2048 :D")
+    grid_size = 0
+    while grid_size < 4:
+        try:
+            input = int(size.textinput("Size of game board?", "Enter a number from 4-6:"))
+            if input > 6:
+                continue
+            else:
+                grid_size = input
+        except ValueError:
+            continue
+        except TypeError:
+            continue
+    return grid_size
 
 def draw_grid():
     '''
@@ -81,14 +113,15 @@ def draw_grid():
 
     color_dictionary = {0: 'AntiqueWhite4', 2: 'AntiqueWhite3', 4: 'wheat3', 8: 'goldenrod3', 
                         16: 'DarkGoldenrod2', 32: 'goldenrod1', 64: 'sienna3', 128: 'sienna2', 
-                        256: 'sienna4', 512: 'DarkSeaGreen4', 1024: 'DarkSeaGreen3', 2048: 'CadetBlue3'}
+                        256: 'sienna4', 512: 'DarkSeaGreen4', 
+                        1024: 'DarkSeaGreen3', 2048: 'CadetBlue3', 4096: 'Coral4'}
 
-    y_coordinate = 120
-    for row in range(GRID_SIZE):
+    y_coordinate = 180
+    for row in range(grid_size):
         # strange bug where a rougue turtle visible, so i hide it with grid
-        x_coordinate = -144
-        for column in range(GRID_SIZE):
-            grid.goto(x_coordinate, y_coordinate)
+        x_coordinate = -150
+        for column in range(grid_size):
+            grid.goto(x_coordinate - 90, y_coordinate + 15)
             # colors
             if global_game_board[row][column] in color_dictionary:
                 grid.color(color_dictionary[global_game_board[row][column]])
@@ -96,11 +129,10 @@ def draw_grid():
                 grid.color('AntiqueWhite4')
             grid.stamp()
             if global_game_board[row][column] != 0:
-                number = turtle.Turtle()
                 number.hideturtle()
                 number.color('white')
                 number.penup()
-                number.goto(x_coordinate, y_coordinate - 15)
+                number.goto(x_coordinate - 90, y_coordinate)
                 number.write(str(global_game_board[row][column]), align = 'center', font=("courier", 25, "bold"))
             x_coordinate += 100
         y_coordinate -= 100
@@ -119,7 +151,7 @@ def display_score():
     score.clear()
     score.hideturtle()
     score.penup()
-    score.goto(-250, 222)
+    score.goto(-280, 310)
     score.color('sienna')
     score.write(f"Score:{global_score}", font = font)
 
@@ -134,16 +166,16 @@ def display_menu():
     menu = turtle.Turtle()
     menu.hideturtle()
     menu.penup()
-    menu.goto(-250, 250)
+    menu.goto(-280, 340)
     menu.color('AntiqueWhite4')
-    menu.write(f"To end game, press 'E'\n"
-               f"To restart,  press 'R'", font = font)
+    menu.write(f"To end game, press 'e'\n"
+               f"To restart,  press 'r'", font = font)
 
 # game over text
 def display_game_over():
     game_over.hideturtle()
     game_over.penup()
-    game_over.goto(-250, 165)
+    game_over.goto(-280, 240)
     game_over.color('firebrick2')
     game_over.write(f"GAME OVER!\n", font = font2)
 
@@ -158,12 +190,12 @@ def check_game_over():
     # check if there are any adjacent matching numbers
     # check rows
     for row in global_game_board:
-        for i in range(GRID_SIZE - 1):
+        for i in range(grid_size - 1):
             if row[i] == row[i+1]:
                 return False
     # check columns
-    for i in range(GRID_SIZE):
-        for j in range(GRID_SIZE - 1):
+    for i in range(grid_size):
+        for j in range(grid_size - 1):
             if global_game_board[j][i] == global_game_board[j+1][i]:
                 return False
     display_game_over()
@@ -173,16 +205,16 @@ def check_game_over():
 def display_win():
     win.hideturtle()
     win.penup()
-    win.goto(-250, 165)
+    win.goto(-280, 240)
     win.color('PaleGreen4')
     win.write(f"YOU WIN!\n", font = font2)
     
-    print('Thank you for playing 2048! \n& for helping us learn '
+    print('Thank you for playing 2048! \n& for helping us learn \n'
           'throughout the semester, \n'
           'to make this game possible! :)\n')
-    win.goto(-250, -285)
+    win.goto(10, 290)
     win.color('PaleGreen4')
-    win.write(f'Thank you for playing 2048! \n& for helping us learn '
+    win.write(f'Thank you for playing 2048! \n& for helping us learn \n'
                      'throughout the semester, \n'
                      'to make this game possible! :)', font = font)
     
@@ -206,15 +238,20 @@ def key_binding():
     turtle.onkey(move_left, 'Left')
     turtle.onkey(move_right, 'Right')
     turtle.onkey(restart_game, 'r')
+    turtle.onkey(restart_game, 'R')
     turtle.onkey(screen.bye, 'e')
+    turtle.onkey(screen.bye, 'E')
     
     # bind error function to all other keys - yikes
-    for key in ['a', 'b', 'c', 'd', 'f', 'g', 'h', 'i', 'j',
+    for key in ['A', 'B', 'C', 'D', 'F', 'G', 'H', 'I', 'J',
+                'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'S', 'T',
+                'U', 'V', 'W', 'X', 'Y', 'Z',
+                'a', 'b', 'c', 'd', 'f', 'g', 'h', 'i', 'j',
                 'k', 'l', 'm', 'n', 'o', 'p', 'q', 's', 't',
                 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3',
                 '4', '5', '6', '7', '8', '9', '0', 'space',
-                'Return', 'Escape', 'BackSpace', 'Tab', 'Caps_Lock',
-                'Shift_L', 'Shift_R', 'Control_L', 'Control_R',
+                'Escape', 'BackSpace', 'Tab', 'Caps_Lock',
+                'Control_L', 'Control_R',
                 'Alt_L', 'Alt_R', 'Pause', 'Scroll_Lock', 'Home',
                 'Insert', 'Delete', 'End', 'Page_Up', 'Page_Down',
                 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8',
@@ -229,7 +266,7 @@ def key_error():
     key_error = turtle.Turtle()
     key_error.hideturtle()
     key_error.penup()
-    key_error.goto(50, -250)
+    key_error.goto(10, 255)
     key_error.color('firebrick2')
     key_error.write(f"Invalid key! Please try again.", font = font)
     turtle.ontimer(key_error.clear, 500)
@@ -237,10 +274,15 @@ def key_error():
 # restart game, clear screen, and start new game
 def restart_game():
     global global_game_board, global_score
+    # clear everything
     global_game_board = []
     global_score = 0
+    grid.clear()
+    number.clear()
     game_over.clear()
     win.clear()
+    # reboot game
+    get_grid_size()
     global_game_board = start_board()
     start_window()
     return global_game_board, global_score
@@ -253,7 +295,7 @@ def move_left():
     valid_move = False
     for row in global_game_board:
         # combine adjacent matching numbers
-        for i in range(GRID_SIZE - 1, 0, -1):
+        for i in range(grid_size - 1, 0, -1):
             if row[i] != 0:
                 for j in range(i-1, -1, -1):
                     if row[j] != 0:
@@ -266,7 +308,7 @@ def move_left():
         # new list of non-zero numbers row
         non_zero_numbers = [number for number in row if number != 0]
         # empty spaces in row
-        empty_spaces = GRID_SIZE - len(non_zero_numbers)
+        empty_spaces = grid_size - len(non_zero_numbers)
         # new list of zeroes with length = to number of empty space
         zeroes = [0] * empty_spaces
         new_row = non_zero_numbers + zeroes
@@ -296,9 +338,9 @@ def move_right():
     valid_move = False
     for row in global_game_board:
         # combine adjacent matching numbers
-        for i in range(GRID_SIZE - 1):
+        for i in range(grid_size - 1):
             if row[i] != 0:
-                for j in range(i+1, GRID_SIZE):
+                for j in range(i+1, grid_size):
                     if row[j] != 0:
                         if row[i] == row[j]:
                             row[i], row[j] = (row[i] * 2), 0
@@ -309,7 +351,7 @@ def move_right():
         # new list containing all non-zero numbers in the current row
         non_zero_numbers = [number for number in row if number != 0]
         # empty spaces in row
-        empty_spaces = GRID_SIZE - len(non_zero_numbers)
+        empty_spaces = grid_size - len(non_zero_numbers)
         # new list of zeroes with length = to number of empty space
         zeroes = [0] * empty_spaces
         new_row = zeroes + non_zero_numbers
@@ -337,9 +379,9 @@ def move_up():
     print('up:')
     # check if move was made
     valid_move = False
-    for column in range(GRID_SIZE):
+    for column in range(grid_size):
         # combine adjacent matching numbers
-        for i in range(GRID_SIZE - 1, 0, -1):
+        for i in range(grid_size - 1, 0, -1):
             if global_game_board[i][column] != 0:
                 for j in range(i-1, -1, -1):
                     if global_game_board[j][column] != 0:
@@ -352,7 +394,7 @@ def move_up():
         # new list containing all non-zero numbers in the current column
         non_zero_numbers = [number for number in [row[column] for row in global_game_board] if number != 0]
         # empty spaces in column
-        empty_spaces = GRID_SIZE - len(non_zero_numbers)
+        empty_spaces = grid_size - len(non_zero_numbers)
         # new list of zeroes with length = to number of empty space
         zeroes = [0] * empty_spaces
         new_column = non_zero_numbers + zeroes
@@ -360,7 +402,7 @@ def move_up():
         if [row[column] for row in global_game_board] != new_column:
             valid_move = True
         # update columns
-        for i in range(GRID_SIZE):
+        for i in range(grid_size):
             global_game_board[i][column] = new_column[i]
     
     if valid_move == True:
@@ -382,11 +424,11 @@ def move_down():
     print('down:')
     # check if move was made
     valid_move = False
-    for column in range(GRID_SIZE):
+    for column in range(grid_size):
         # combine adjacent matching numbers
-        for i in range(GRID_SIZE - 1):
+        for i in range(grid_size - 1):
             if global_game_board[i][column] != 0:
-                for j in range(i+1, GRID_SIZE):
+                for j in range(i+1, grid_size):
                     if global_game_board[j][column] != 0:
                         if global_game_board[i][column] == global_game_board[j][column]:
                             global_game_board[i][column], global_game_board[j][column] = (global_game_board[i][column] * 2), 0
@@ -397,7 +439,7 @@ def move_down():
         # new list containing all non-zero numbers in the current column
         non_zero_numbers = [number for number in [row[column] for row in global_game_board] if number != 0]
         # empty spaces in column
-        empty_spaces = GRID_SIZE - len(non_zero_numbers)
+        empty_spaces = grid_size - len(non_zero_numbers)
         # new list of zeroes with length = to number of empty space
         zeroes = [0] * empty_spaces
         new_column = zeroes + non_zero_numbers
@@ -405,7 +447,7 @@ def move_down():
         if [row[column] for row in global_game_board] != new_column:
             valid_move = True
         # update columns
-        for i in range(GRID_SIZE):
+        for i in range(grid_size):
             global_game_board[i][column] = new_column[i]
             
     if valid_move == True:
@@ -427,9 +469,9 @@ def move_down():
 def initialize_board():
     global global_game_board
     # iterate through 4 rows
-    for size in range(GRID_SIZE):
+    for size in range(grid_size):
         # create a list of 4 zeros
-        global_game_board.append([0] * GRID_SIZE)
+        global_game_board.append([0] * grid_size)
     
     # add two numbers to the board
     add_new_number()
@@ -451,12 +493,12 @@ def add_new_number():
     check_game_over()
     check_win()
     
-    print(f'new number added:')
+    print('new number added:')
     
     while True:
         # pick a random row and column
-        random_row = random.randint(0, GRID_SIZE - 1)
-        random_column = random.randint(0, GRID_SIZE - 1)
+        random_row = random.randint(0, grid_size - 1)
+        random_column = random.randint(0, grid_size - 1)
         # if the cell is empty, add a 2 or 4
         if global_game_board[random_row][random_column] == 0:
             break

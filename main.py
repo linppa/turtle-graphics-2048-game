@@ -5,6 +5,7 @@ from functions_2048 import *
 # global_game_board imported from functions_2048.py
 
 def main():
+    get_grid_size()
     global global_game_board
     global_game_board = start_board()
 
