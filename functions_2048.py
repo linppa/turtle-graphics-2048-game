@@ -56,12 +56,12 @@ def start_window():
     initial grid, score, & menu options. Also calls key bindings for controls.
     '''
     if grid_size == 4:
-        screen.setup(800, 850)
+        screen.setup(650, 750)
     elif grid_size == 5:
-        screen.setup(800, 850)
+        screen.setup(730, 830)
     elif grid_size == 6:
-        screen.setup(850, 900)
-    
+        screen.setup(850, 950)
+
     screen.title('CS5001 2048 :D')
     screen.bgcolor('seashell2')
     draw_grid()
@@ -69,8 +69,9 @@ def start_window():
     display_score()
     display_menu()
     
-    display_win()
-    display_game_over()
+    # display_win()
+    # display_game_over()
+    
     # key bindings
     key_binding()
     # continue run window
@@ -82,7 +83,7 @@ def get_grid_size():
     '''
     global grid_size
     size = turtle.Screen()
-    size.setup(500, 500)
+    size.setup(450, 450)
     screen.bgcolor('seashell2')
     size.title("Welcome to CS5001 2048 :D")
     grid_size = 0
@@ -106,6 +107,7 @@ def draw_grid():
     '''
     grid.hideturtle()
     grid.clear()
+    number.clear()
     grid.speed(0)
     grid.penup()
     grid.shape('square')
@@ -114,14 +116,14 @@ def draw_grid():
     color_dictionary = {0: 'AntiqueWhite4', 2: 'AntiqueWhite3', 4: 'wheat3', 8: 'goldenrod3', 
                         16: 'DarkGoldenrod2', 32: 'goldenrod1', 64: 'sienna3', 128: 'sienna2', 
                         256: 'sienna4', 512: 'DarkSeaGreen4', 
-                        1024: 'DarkSeaGreen3', 2048: 'CadetBlue3', 4096: 'Coral4'}
+                        1024: 'DarkSeaGreen3', 2048: 'CadetBlue3', 4096: 'CadetBlue4'}
 
-    y_coordinate = 180
+    y_coordinate = 125
     for row in range(grid_size):
         # strange bug where a rougue turtle visible, so i hide it with grid
-        x_coordinate = -150
+        x_coordinate = -90
         for column in range(grid_size):
-            grid.goto(x_coordinate - 90, y_coordinate + 15)
+            grid.goto(x_coordinate - 120, y_coordinate + 10)
             # colors
             if global_game_board[row][column] in color_dictionary:
                 grid.color(color_dictionary[global_game_board[row][column]])
@@ -132,7 +134,7 @@ def draw_grid():
                 number.hideturtle()
                 number.color('white')
                 number.penup()
-                number.goto(x_coordinate - 90, y_coordinate)
+                number.goto(x_coordinate - 120, y_coordinate - 5)
                 number.write(str(global_game_board[row][column]), align = 'center', font=("courier", 25, "bold"))
             x_coordinate += 100
         y_coordinate -= 100
@@ -151,7 +153,7 @@ def display_score():
     score.clear()
     score.hideturtle()
     score.penup()
-    score.goto(-280, 310)
+    score.goto(-280, 270)
     score.color('sienna')
     score.write(f"Score:{global_score}", font = font)
 
@@ -166,7 +168,7 @@ def display_menu():
     menu = turtle.Turtle()
     menu.hideturtle()
     menu.penup()
-    menu.goto(-280, 340)
+    menu.goto(-280, 300)
     menu.color('AntiqueWhite4')
     menu.write(f"To end game, press 'e'\n"
                f"To restart,  press 'r'", font = font)
@@ -174,8 +176,9 @@ def display_menu():
 # game over text
 def display_game_over():
     game_over.hideturtle()
+    game_over.clear()
     game_over.penup()
-    game_over.goto(-280, 240)
+    game_over.goto(-280, 200)
     game_over.color('firebrick2')
     game_over.write(f"GAME OVER!\n", font = font2)
 
@@ -204,15 +207,16 @@ def check_game_over():
 
 def display_win():
     win.hideturtle()
+    win.clear()
     win.penup()
-    win.goto(-280, 240)
+    win.goto(-280, 200)
     win.color('PaleGreen4')
     win.write(f"YOU WIN!\n", font = font2)
     
     print('Thank you for playing 2048! \n& for helping us learn \n'
           'throughout the semester, \n'
           'to make this game possible! :)\n')
-    win.goto(10, 290)
+    win.goto(10, 260)
     win.color('PaleGreen4')
     win.write(f'Thank you for playing 2048! \n& for helping us learn \n'
                      'throughout the semester, \n'
@@ -251,7 +255,7 @@ def key_binding():
                 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3',
                 '4', '5', '6', '7', '8', '9', '0', 'space',
                 'Escape', 'BackSpace', 'Tab', 'Caps_Lock',
-                'Control_L', 'Control_R',
+                'Control_L', 'Control_R', 'Return',
                 'Alt_L', 'Alt_R', 'Pause', 'Scroll_Lock', 'Home',
                 'Insert', 'Delete', 'End', 'Page_Up', 'Page_Down',
                 'F1', 'F2', 'F3', 'F4', 'F5', 'F6', 'F7', 'F8',
@@ -266,9 +270,9 @@ def key_error():
     key_error = turtle.Turtle()
     key_error.hideturtle()
     key_error.penup()
-    key_error.goto(10, 255)
+    key_error.goto(10, 200)
     key_error.color('firebrick2')
-    key_error.write(f"Invalid key! Please try again.", font = font)
+    key_error.write(f"Invalid key! Try again.", font = font)
     turtle.ontimer(key_error.clear, 500)
 
 # restart game, clear screen, and start new game
@@ -295,9 +299,9 @@ def move_left():
     valid_move = False
     for row in global_game_board:
         # combine adjacent matching numbers
-        for i in range(grid_size - 1, 0, -1):
+        for i in range(0, grid_size - 1,):
             if row[i] != 0:
-                for j in range(i-1, -1, -1):
+                for j in range(i+1, grid_size):
                     if row[j] != 0:
                         if row[i] == row[j]:
                             row[i], row[j] = (row[i] * 2), 0
@@ -307,7 +311,6 @@ def move_left():
         # shift all non-zero numbers to the left
         # new list of non-zero numbers row
         non_zero_numbers = [number for number in row if number != 0]
-        # empty spaces in row
         empty_spaces = grid_size - len(non_zero_numbers)
         # new list of zeroes with length = to number of empty space
         zeroes = [0] * empty_spaces
@@ -338,9 +341,9 @@ def move_right():
     valid_move = False
     for row in global_game_board:
         # combine adjacent matching numbers
-        for i in range(grid_size - 1):
+        for i in range(grid_size - 1, 0, -1):
             if row[i] != 0:
-                for j in range(i+1, grid_size):
+                for j in range(i-1, -1, -1):
                     if row[j] != 0:
                         if row[i] == row[j]:
                             row[i], row[j] = (row[i] * 2), 0
@@ -381,9 +384,12 @@ def move_up():
     valid_move = False
     for column in range(grid_size):
         # combine adjacent matching numbers
-        for i in range(grid_size - 1, 0, -1):
+        for i in range(grid_size - 1):
             if global_game_board[i][column] != 0:
-                for j in range(i-1, -1, -1):
+                for j in range(i+1, grid_size):
+        # for i in range(grid_size - 1, 0, -1):
+        #     if global_game_board[i][column] != 0:
+        #         for j in range(i-1, -1, -1):
                     if global_game_board[j][column] != 0:
                         if global_game_board[i][column] == global_game_board[j][column]:
                             global_game_board[i][column], global_game_board[j][column] = (global_game_board[i][column] * 2), 0
@@ -426,9 +432,12 @@ def move_down():
     valid_move = False
     for column in range(grid_size):
         # combine adjacent matching numbers
-        for i in range(grid_size - 1):
+        for i in range(grid_size - 1, 0, -1):
             if global_game_board[i][column] != 0:
-                for j in range(i+1, grid_size):
+                for j in range(i-1, -1, -1):
+        # for i in range(grid_size - 1):
+        #     if global_game_board[i][column] != 0:
+        #         for j in range(i+1, grid_size):
                     if global_game_board[j][column] != 0:
                         if global_game_board[i][column] == global_game_board[j][column]:
                             global_game_board[i][column], global_game_board[j][column] = (global_game_board[i][column] * 2), 0
