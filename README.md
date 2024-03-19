@@ -2,6 +2,8 @@ Linda Quach
 CS 5001 - Spring 2023
 Final Project - 2048
 
+<img src="images/progress.png" width="500" />
+
 # HIGH-LEVEL DESIGN:
     The game of 2048 is a simple 1-player board game, comprising of a 4x4 grid of
     numbers. The player starts with two numbers (2 or 4) on the board, and in each
@@ -70,7 +72,8 @@ Final Project - 2048
     5. The game ends when there are no more moves left, meaning it is a "Game Over". A messege will display to let the player know it is Game Over.
     6. When the player reaches a tile with the value of 2048, they win! However they may continue to play to obtain even higher tile numbers or until no more moves are possible.
 
-![400](images/startup.png)
+<img src="images/startup.png" width="500" />
+<img src="images/enter_game.png" width="500" />
 
 # WORKING FEATURES:
     1. The screen shows the board with numbers clearly, with matching tile colors.
