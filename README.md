@@ -70,7 +70,7 @@ Final Project - 2048
     5. The game ends when there are no more moves left, meaning it is a "Game Over". A messege will display to let the player know it is Game Over.
     6. When the player reaches a tile with the value of 2048, they win! However they may continue to play to obtain even higher tile numbers or until no more moves are possible.
 
-![game size](images/startup.png)
+![400](images/startup.png)
 
 # WORKING FEATURES:
     1. The screen shows the board with numbers clearly, with matching tile colors.
