@@ -1,6 +1,6 @@
-# Final Project - 2048
-* Author: Linda Quach
-* CS 5001 - Spring 2023
+# Turtle Graphics 2048
+- Author: Linda Quach
+- CS 5001 - Spring 2023
 
 <img src="images/progress.png" width="500" />
 
